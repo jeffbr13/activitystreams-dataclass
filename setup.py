@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="activitystreams-dataclass",
-    version="0.0.1",
+    version="0.0.2",
     author="Ben Jeffrey",
     author_email="mail@benjeffrey.net",
     description="Dataclasses for ActivityStreams objects",
