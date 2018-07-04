@@ -18,7 +18,11 @@ ActivityStreamsOrderedCollectionPageEntity = Union['ActivityStreamsOrderedCollec
 
 
 class ActivityStreamsEntity:
-    pass
+    def __repr__(self):
+        return json.dumps(self.to_dict())
+
+    def to_dict(self):
+        raise NotImplementedError
 
 
 @dataclass
@@ -87,9 +91,6 @@ class Object(ActivityStreamsEntity):
             'duration': self.duration,
         }
 
-    # def __repr__(self):
-    #     return json.dumps(self.to_dict())
-
 
 @dataclass
 class Link(ActivityStreamsEntity):
@@ -119,9 +120,6 @@ class Link(ActivityStreamsEntity):
             'width': self.width,
             'preview': self.preview,
         }
-
-    # def __repr__(self):
-    #     return json.dumps(self.to_dict())
 
 
 @dataclass
