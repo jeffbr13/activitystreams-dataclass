@@ -1,14 +1,14 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Union, Optional, Mapping, Collection as CollectionT
+from typing import Union, Optional, Mapping, Collection as CollectionType
 
 
 LD_NAMESPACE = 'https://www.w3.org/ns/activitystreams'
 
 LangString = Mapping[str, str]  # todo - limit keys to IETF language tags
+String = Union[str, LangString]
 
-ActivityStreamsEntity = Union['ActivityStreamsObject', 'ActivityStreamsLink']
 ActivityStreamsImageEntity = Union['ActivityStreamsImage', 'ActivityStreamsLink']
 
 ActivityStreamsCollectionEntity = Union['ActivityStreamsCollection', 'ActivityStreamsLink']
@@ -17,16 +17,20 @@ ActivityStreamsOrderedCollectionEntity = Union['ActivityStreamsOrderedCollection
 ActivityStreamsOrderedCollectionPageEntity = Union['ActivityStreamsOrderedCollectionPage', 'ActivityStreamsLink']
 
 
+class ActivityStreamsEntity:
+    pass
+
+
 @dataclass
-class Object:
-    nameMap: LangString = None
-    contentMap: LangString = None
-    summaryMap: Optional[LangString] = None
+class Object(ActivityStreamsEntity):
+    name: String = None
+    content: String = None
+    summary: Optional[String] = None
     published: Optional[datetime] = None
     attachment: Optional[ActivityStreamsEntity] = None
     updated: Optional[datetime] = None
     attributedTo: Optional[ActivityStreamsEntity] = None
-    audience: CollectionT[ActivityStreamsEntity] = None
+    audience: CollectionType[ActivityStreamsEntity] = None
     context: Optional[ActivityStreamsEntity] = None
     startTime: Optional[datetime] = None
     endTime: Optional[datetime] = None
@@ -36,15 +40,15 @@ class Object:
     icon: Optional[ActivityStreamsImageEntity] = None
     image: Optional[ActivityStreamsImageEntity] = None
     url: Optional['Link'] = None
-    inReplyTo: CollectionT[ActivityStreamsEntity] = None
+    inReplyTo: CollectionType[ActivityStreamsEntity] = None
     replies: Optional['Collection'] = None
-    location: CollectionT[ActivityStreamsEntity] = None
-    preview: CollectionT[ActivityStreamsEntity] = None
-    tag: CollectionT[ActivityStreamsEntity] = None
-    to: CollectionT[ActivityStreamsEntity] = None
-    bto: CollectionT[ActivityStreamsEntity] = None
-    cc: CollectionT[ActivityStreamsEntity] = None
-    bcc: CollectionT[ActivityStreamsEntity] = None
+    location: CollectionType[ActivityStreamsEntity] = None
+    preview: CollectionType[ActivityStreamsEntity] = None
+    tag: CollectionType[ActivityStreamsEntity] = None
+    to: CollectionType[ActivityStreamsEntity] = None
+    bto: CollectionType[ActivityStreamsEntity] = None
+    cc: CollectionType[ActivityStreamsEntity] = None
+    bcc: CollectionType[ActivityStreamsEntity] = None
 
     @property
     def type(self):
@@ -88,11 +92,11 @@ class Object:
 
 
 @dataclass
-class Link:
+class Link(ActivityStreamsEntity):
     href: str
     rel: Optional[str] = None
     mediaType: Optional[str] = None
-    name: Optional[LangString] = None
+    name: Optional[String] = None
     hreflang: Optional[str] = None
     height: Optional[int] = None
     width: Optional[int] = None
@@ -124,7 +128,7 @@ class Link:
 class Activity(Object):
     actor: ActivityStreamsEntity = None
     object: Object = None
-    target: CollectionT[ActivityStreamsEntity] = None
+    target: CollectionType[ActivityStreamsEntity] = None
     result: Optional[ActivityStreamsEntity] = None
     origin: Optional[ActivityStreamsEntity] = None
     instrument: Optional[ActivityStreamsEntity] = None
@@ -145,7 +149,7 @@ class Activity(Object):
 @dataclass
 class IntransitiveActivity(Object):
     actor: ActivityStreamsEntity = None
-    target: CollectionT[ActivityStreamsEntity] = None
+    target: CollectionType[ActivityStreamsEntity] = None
     result: Optional[ActivityStreamsEntity] = None
     origin: Optional[ActivityStreamsEntity] = None
     instrument: Optional[ActivityStreamsEntity] = None
@@ -168,7 +172,7 @@ class Collection(Object):
     current: Optional[ActivityStreamsCollectionPageEntity] = None
     first: Optional[ActivityStreamsCollectionPageEntity] = None
     last: Optional[ActivityStreamsCollectionPageEntity] = None
-    items: CollectionT[ActivityStreamsEntity] = None
+    items: CollectionType[ActivityStreamsEntity] = None
 
     def __post_init__(self):
         assert self.items or (self.current or self.first or self.last), \
